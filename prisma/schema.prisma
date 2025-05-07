@@ -63,18 +63,19 @@ model pesquisa {
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model questionario {
-  id_questionario  String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  id_entrevistado  String?    @db.Uuid
-  id_pesquisa      String?    @db.Uuid
-  pergunta_atual   Int?       @default(1)
-  status           String?    @default("em_andamento")
-  data_hora_fim    DateTime   @db.Timestamp(6)
-  data_hora_inicio DateTime?  @default(now()) @db.Timestamp(6)
+  id_questionario  String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_entrevistado  String?            @db.Uuid
+  id_pesquisa      String?            @db.Uuid
+  pergunta_atual   Int?               @default(1)
+  status           String?            @default("em_andamento")
+  data_hora_fim    DateTime           @db.Timestamp(6)
+  data_hora_inicio DateTime?          @default(now()) @db.Timestamp(6)
   observacoes      String?
   avaliacao_final  String?
-  nota             Float?     @db.Real
-  contato          contato?   @relation(fields: [id_entrevistado], references: [id_entrevistado], onDelete: Cascade, onUpdate: NoAction)
-  pesquisa         pesquisa?  @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: Cascade, onUpdate: NoAction)
+  nota             Float?             @db.Real
+  fonte            FonteQuestionario?
+  contato          contato?           @relation(fields: [id_entrevistado], references: [id_entrevistado], onDelete: Cascade, onUpdate: NoAction)
+  pesquisa         pesquisa?          @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: Cascade, onUpdate: NoAction)
   resposta         resposta[]
 
   @@unique([id_entrevistado, id_pesquisa], map: "unique_questionario_per_entrevistado")
@@ -101,4 +102,9 @@ enum StatusEntrevistado {
   PESQUISA_NEGADA
   PESQUISA_FINALIZADA
   CONVIDAR
+}
+
+enum FonteQuestionario {
+  trafego_pago
+  lista_de_envios
 }
