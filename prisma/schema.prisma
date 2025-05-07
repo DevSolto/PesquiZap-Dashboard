@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model contato {
+  id_entrevistado String         @id(map: "entrevistado_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome            String?
+  telefone        String         @unique(map: "entrevistado_telefone_key")
+  zona            String?
+  localidade      String?
+  genero          String?
+  idade           Int?
+  escolaridade    String?
+  faixa_renda     String?
+  data_cadastro   DateTime       @default(now()) @db.Timestamp(6)
+  status          String?
+  cidade          String?
+  estado          String?
+  id_pesquisa     String?        @db.Uuid
+  pesquisa        pesquisa?      @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: NoAction, onUpdate: NoAction)
+  questionario    questionario[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model erros {
+  id                  BigInt   @id @default(autoincrement())
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+  id_da_execu__o      String?  @map("id_da_execução")
+  nome_do_fluxo       String?
+  ultimo_no_executado String?
+  mensagem            String?
+}
+
+model pergunta {
+  id_pergunta    String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_pesquisa    String?    @db.Uuid
+  texto_pergunta String
+  ordem          Int
+  tipo           String     @default("aberta")
+  audio_url      String?
+  pesquisa       pesquisa?  @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: Cascade, onUpdate: NoAction)
+  resposta       resposta[]
+}
+
+model pesquisa {
+  id_pesquisa  String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  titulo       String
+  descricao    String?
+  data_inicio  DateTime       @default(now()) @db.Timestamp(6)
+  data_fim     DateTime?      @db.Timestamp(6)
+  status       String         @default("ativa")
+  contato      contato[]
+  pergunta     pergunta[]
+  questionario questionario[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model questionario {
+  id_questionario  String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_entrevistado  String?    @db.Uuid
+  id_pesquisa      String?    @db.Uuid
+  pergunta_atual   Int?       @default(1)
+  status           String?    @default("em_andamento")
+  data_hora_fim    DateTime   @db.Timestamp(6)
+  data_hora_inicio DateTime?  @default(now()) @db.Timestamp(6)
+  observacoes      String?
+  avaliacao_final  String?
+  nota             Float?     @db.Real
+  contato          contato?   @relation(fields: [id_entrevistado], references: [id_entrevistado], onDelete: Cascade, onUpdate: NoAction)
+  pesquisa         pesquisa?  @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: Cascade, onUpdate: NoAction)
+  resposta         resposta[]
+
+  @@unique([id_entrevistado, id_pesquisa], map: "unique_questionario_per_entrevistado")
+}
+
+model resposta {
+  id_resposta       String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id_questionario   String?       @db.Uuid
+  id_pergunta       String?       @db.Uuid
+  conteudo_resposta String
+  data_hora         DateTime      @default(now()) @db.Timestamp(6)
+  pergunta          pergunta?     @relation(fields: [id_pergunta], references: [id_pergunta], onDelete: Cascade, onUpdate: NoAction)
+  questionario      questionario? @relation(fields: [id_questionario], references: [id_questionario], onDelete: Cascade, onUpdate: NoAction)
+}
+
+enum LocalidadeEntrevistado {
+  URBANA
+  RURAL
+}
+
+enum StatusEntrevistado {
+  CONVIDADO
+  PESQUISA_EM_ANDAMENTO
+  PESQUISA_NEGADA
+  PESQUISA_FINALIZADA
+  CONVIDAR
+}
