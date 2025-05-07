@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/prisma";
+import { questionario } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
@@ -10,6 +11,7 @@ export async function GET(request: Request) {
   }
 
   try {
+    // Obter todos os questionários da pesquisa selecionada e que foram finalizados
     const questionarios = await prisma.questionario.findMany({
       where: {
         data_hora_fim: {
@@ -23,8 +25,13 @@ export async function GET(request: Request) {
       },
     });
 
+    type QuestionarioReduced = {
+      data_hora_inicio: Date | null;
+      data_hora_fim: Date;
+    };
+
     // Somar os tempos de resposta
-    const totalTempo = questionarios.reduce((total: number, questionario) => {
+    const totalTempo = questionarios.reduce((total: number, questionario: QuestionarioReduced) => {
       // Garantir que as datas sejam válidas antes de fazer os cálculos
       if (questionario.data_hora_inicio && questionario.data_hora_fim) {
         const inicio = new Date(questionario.data_hora_inicio).getTime();  // Convertendo para milissegundos
