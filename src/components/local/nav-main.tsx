@@ -1,4 +1,3 @@
-// app/components/NavMain.tsx
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -8,8 +7,7 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { LucideIcon } from "lucide-react"
-import PesquisaSelect from "./PesquisaSelect"  // Importando o componente de select
-import { GET } from "@/app/api/pesquisas/route"
+import PesquisaSelect from "./PesquisaSelect" 
 
 type NavMainProps = {
   items: {
@@ -25,7 +23,7 @@ export default function NavMain({ items }: NavMainProps) {
       <SidebarGroupContent className="flex flex-col gap-2">
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center gap-2">
-            <PesquisaSelect />  {/* Usando o componente PesquisaSelect */}
+            <PesquisaSelect/>
           </SidebarMenuItem>
         </SidebarMenu>
         <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
@@ -45,14 +43,3 @@ export default function NavMain({ items }: NavMainProps) {
   )
 }
 
-// Server-side data fetching
-export async function getServerSideProps() {
-  // Fazendo a requisição à API para pegar as pesquisas
-  const pesquisas = await GET()
-
-  return {
-    props: {
-      pesquisas, // Passando os dados das pesquisas para o componente
-    },
-  }
-}

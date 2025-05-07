@@ -2,25 +2,16 @@
 
 import type * as React from "react"
 import {
-  
-  BarChartIcon,
   CameraIcon,
-  ClipboardListIcon,
   DatabaseIcon,
   FileCodeIcon,
   FileDownIcon,
-  FileIcon,
   FileTextIcon,
-  FolderIcon,
   HelpCircleIcon,
-  LayoutDashboardIcon,
-  ListIcon,
   PhoneIcon,
   SearchIcon,
   SettingsIcon,
-  UsersIcon,
   Workflow,
-  WorkflowIcon,
 } from "lucide-react"
 
 import {
@@ -33,7 +24,6 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { NavDocuments } from "./nav-documents"
-import { NavSecondary } from "./nav-secondary"
 import { NavUser } from "./nav-user"
 import NavMain from "./nav-main"
 
