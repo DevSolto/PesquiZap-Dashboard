@@ -1,5 +1,3 @@
-'use client'
-
 // app/components/NavMain.tsx
 import {
   SidebarGroup,
