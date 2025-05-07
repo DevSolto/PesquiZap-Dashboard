@@ -10,7 +10,6 @@ export async function GET(request: Request) {
   }
 
   try {
-    // Obter todos os questionários da pesquisa selecionada e que foram finalizados
     const questionarios = await prisma.questionario.findMany({
       where: {
         data_hora_fim: {
@@ -25,18 +24,19 @@ export async function GET(request: Request) {
     });
 
     // Somar os tempos de resposta
-    const totalTempo = questionarios.reduce((total, questionario) => {
+    const totalTempo = questionarios.reduce((total: number, questionario) => {
+      // Garantir que as datas sejam válidas antes de fazer os cálculos
       if (questionario.data_hora_inicio && questionario.data_hora_fim) {
         const inicio = new Date(questionario.data_hora_inicio).getTime();  // Convertendo para milissegundos
         const fim = new Date(questionario.data_hora_fim).getTime();        // Convertendo para milissegundos
 
-        // Garantir que o tempo de fim seja posterior ao de início
-        if (fim > inicio) {
-          const tempoResposta = (fim - inicio) / (1000 * 60); // tempo em minutos
-          return total + tempoResposta;
+        // Verificar se as datas são válidas
+        if (!isNaN(inicio) && !isNaN(fim) && fim > inicio) {
+          const tempoResposta = (fim - inicio) / (1000 * 60); // tempo em minutos (1000 milissegundos = 1 segundo, 60 segundos = 1 minuto)
+          return total + tempoResposta;  // Soma o tempo ao total
         }
       }
-      return total;
+      return total; // Caso a data não seja válida, retorna o total atual sem alterações
     }, 0);
 
     // Calcular a média em minutos
