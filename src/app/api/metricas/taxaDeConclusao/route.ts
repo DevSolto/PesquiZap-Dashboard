@@ -16,8 +16,6 @@ export async function GET(request: Request) {
         id_pesquisa: idPesquisa, // Filtra pela pesquisa selecionada
       },
     });
-    console.log("Total de questionários:", totalQuestionarios); // Log do total de questionários
-
     // Conta o total de questionários com status 'concluido' para a pesquisa selecionada
     const questionariosCompletados = await prisma.questionario.count({
       where: {

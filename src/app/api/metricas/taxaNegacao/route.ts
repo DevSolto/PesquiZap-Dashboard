@@ -16,8 +16,6 @@ export async function GET(request: Request) {
         id_pesquisa: idPesquisa, // Filtra pela pesquisa selecionada
       },
     });
-    console.log("Total de questionários:", totalQuestionarios); // Log do total de questionários
-
     // Conta o total de questionários com status 'negado' para a pesquisa selecionada
     const questionariosNegados = await prisma.questionario.count({
       where: {
@@ -25,8 +23,6 @@ export async function GET(request: Request) {
         id_pesquisa: idPesquisa, // Filtra pela pesquisa selecionada
       },
     });
-    console.log("Total de questionários negados:", questionariosNegados); // Log do total de questionários negados
-
     // Calcula a taxa de negação
     const taxaDeNegacao = totalQuestionarios > 0 ? (questionariosNegados / totalQuestionarios) * 100 : 0;
 
