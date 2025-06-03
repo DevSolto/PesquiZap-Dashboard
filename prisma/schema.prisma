@@ -14,17 +14,15 @@ model contato {
   nome            String?
   telefone        String         @unique(map: "entrevistado_telefone_key")
   zona            String?
-  localidade      String?
   genero          String?
   idade           Int?
   escolaridade    String?
-  faixa_renda     String?
+  profissao       String?
   data_cadastro   DateTime       @default(now()) @db.Timestamp(6)
   status          String?
   cidade          String?
-  estado          String?
-  id_pesquisa     String?        @db.Uuid
-  pesquisa        pesquisa?      @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: NoAction, onUpdate: NoAction)
+  Id_mensagem_voz String?
+  religi_o        String?        @map("religião")
   questionario    questionario[]
 }
 
@@ -56,7 +54,6 @@ model pesquisa {
   data_inicio  DateTime       @default(now()) @db.Timestamp(6)
   data_fim     DateTime?      @db.Timestamp(6)
   status       String         @default("ativa")
-  contato      contato[]
   pergunta     pergunta[]
   questionario questionario[]
 }
@@ -68,8 +65,8 @@ model questionario {
   id_pesquisa      String?            @db.Uuid
   pergunta_atual   Int?               @default(1)
   status           String?            @default("em_andamento")
-  data_hora_fim    DateTime           @db.Timestamp(6)
-  data_hora_inicio DateTime?          @default(now()) @db.Timestamp(6)
+  data_hora_fim    DateTime?          @db.Timestamptz(6)
+  data_hora_inicio DateTime?          @default(now()) @db.Timestamptz(6)
   observacoes      String?
   avaliacao_final  String?
   nota             Float?             @db.Real
@@ -89,6 +86,12 @@ model resposta {
   data_hora         DateTime      @default(now()) @db.Timestamp(6)
   pergunta          pergunta?     @relation(fields: [id_pergunta], references: [id_pergunta], onDelete: Cascade, onUpdate: NoAction)
   questionario      questionario? @relation(fields: [id_questionario], references: [id_questionario], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model n8n_chat_histories {
+  id         Int    @id @default(autoincrement())
+  session_id String @db.VarChar(255)
+  message    Json
 }
 
 enum LocalidadeEntrevistado {

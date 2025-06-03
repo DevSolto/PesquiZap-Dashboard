@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     const questionarios = await prisma.questionario.findMany({
       where: {
         data_hora_fim: {
-          not: undefined, // Certificando-se de que data_hora_fim não é nulo
+          not: null, // Certificando-se de que data_hora_fim não é nulo
         },
         id_pesquisa: idPesquisa, // Filtra pela pesquisa selecionada
       },

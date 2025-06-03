@@ -64,6 +64,8 @@ export function ResumoQuestionarios() {
         `/api/questionarios?id_pesquisa=${selectedPesquisa}&status=${status}`
       );
       const data = await response.json();
+      console.log(`Dados para status "${status}":`, data);
+      // Verifica se data é um array e tem a propriedade length
       setter(data.length);
     } catch (error) {
       console.error(`Erro ao buscar os questionários (${status}):`, error);
