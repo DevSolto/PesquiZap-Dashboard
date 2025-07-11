@@ -56,6 +56,7 @@ model pesquisa {
   status       String         @default("ativa")
   pergunta     pergunta[]
   questionario questionario[]
+  usuarios     usuario_pesquisa[]
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -92,6 +93,24 @@ model n8n_chat_histories {
   id         Int    @id @default(autoincrement())
   session_id String @db.VarChar(255)
   message    Json
+}
+
+model usuario {
+  id_usuario String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nome       String
+  email      String @unique
+  senha      String
+  acessos    usuario_pesquisa[]
+}
+
+model usuario_pesquisa {
+  id_usuario  String @db.Uuid
+  id_pesquisa String @db.Uuid
+
+  usuario  usuario  @relation(fields: [id_usuario], references: [id_usuario], onDelete: Cascade, onUpdate: NoAction)
+  pesquisa pesquisa @relation(fields: [id_pesquisa], references: [id_pesquisa], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([id_usuario, id_pesquisa])
 }
 
 enum LocalidadeEntrevistado {
