@@ -17,7 +17,7 @@ export async function GET() {
 
   const pesquisas = await prisma.pesquisa.findMany({
     where: {
-      id_pesquisa: { in: acessos.map((a) => a.pesquisa_id) },
+      id_pesquisa: { in: acessos.map((a) => a.pesquisa_id).filter((id): id is string => id !== null) },
     },
   });
 
