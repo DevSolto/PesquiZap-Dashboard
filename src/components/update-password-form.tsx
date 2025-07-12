@@ -33,7 +33,7 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
       // Redirect authenticated users to the dashboard
       router.push('/dashboard')
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : 'Ocorreu um erro')
     } finally {
       setIsLoading(false)
     }
@@ -43,18 +43,18 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
     <div className={cn('flex flex-col gap-6', className)} {...props}>
       <Card>
         <CardHeader>
-          <CardTitle className="text-2xl">Reset Your Password</CardTitle>
-          <CardDescription>Please enter your new password below.</CardDescription>
+          <CardTitle className="text-2xl">Redefina sua senha</CardTitle>
+          <CardDescription>Digite sua nova senha abaixo.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleForgotPassword}>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
-                <Label htmlFor="password">New password</Label>
+                <Label htmlFor="password">Nova senha</Label>
                 <Input
                   id="password"
                   type="password"
-                  placeholder="New password"
+                  placeholder="Nova senha"
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -62,7 +62,7 @@ export function UpdatePasswordForm({ className, ...props }: React.ComponentProps
               </div>
               {error && <p className="text-sm text-red-500">{error}</p>}
               <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? 'Saving...' : 'Save new password'}
+                {isLoading ? 'Salvando...' : 'Salvar nova senha'}
               </Button>
             </div>
           </form>
