@@ -36,7 +36,7 @@ const data = {
   navMain: [
     {
       title: "Respostas",
-      url: "#",
+      url: "/api/relatorios/respostas",
       icon: FileDownIcon,
     },
     {

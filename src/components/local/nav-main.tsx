@@ -1,3 +1,5 @@
+"use client"
+
 import {
   SidebarGroup,
   SidebarGroupContent,
@@ -7,7 +9,8 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import { LucideIcon } from "lucide-react"
-import PesquisaSelect from "./PesquisaSelect" 
+import PesquisaSelect from "./PesquisaSelect"
+import { usePesquisa } from "@/app/context/PesquisaContext"
 
 type NavMainProps = {
   items: {
@@ -18,6 +21,8 @@ type NavMainProps = {
 }
 
 export default function NavMain({ items }: NavMainProps) {
+  const { selectedPesquisa } = usePesquisa();
+
   return (
     <SidebarGroup>
       <SidebarGroupContent className="flex flex-col gap-2">
@@ -31,9 +36,17 @@ export default function NavMain({ items }: NavMainProps) {
         <SidebarMenu>
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton>
-                {item.icon && <item.icon />}
-                <span>{item.title}</span>
+              <SidebarMenuButton asChild>
+                <a
+                  href={
+                    selectedPesquisa
+                      ? `${item.url}?id_pesquisa=${encodeURIComponent(selectedPesquisa)}`
+                      : "#"
+                  }
+                >
+                  {item.icon && <item.icon />}
+                  <span>{item.title}</span>
+                </a>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
