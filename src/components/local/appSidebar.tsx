@@ -27,30 +27,25 @@ import { NavDocuments } from "./nav-documents"
 import { NavUser } from "./nav-user"
 import NavMain from "./nav-main"
 
-const data = {
-  user: {
-    name: "Antonio",
-    email: "antonio@example.com",
-    avatar: "",
+const navMain = [
+  {
+    title: "Respostas",
+    url: "/api/relatorios/respostas",
+    icon: FileDownIcon,
   },
-  navMain: [
-    {
-      title: "Respostas",
-      url: "/api/relatorios/respostas",
-      icon: FileDownIcon,
-    },
-    {
-      title: "Total de caracteres",
-      url: "#",
-      icon: FileDownIcon,
-    },
-    {
-      title: "Questionários",
-      url: "#",
-      icon: FileDownIcon,
-    },
-  ],
-  navClouds: [
+  {
+    title: "Total de caracteres",
+    url: "#",
+    icon: FileDownIcon,
+  },
+  {
+    title: "Questionários",
+    url: "#",
+    icon: FileDownIcon,
+  },
+];
+
+const navClouds = [
     {
       title: "Capture",
       icon: CameraIcon,
@@ -97,8 +92,9 @@ const data = {
         },
       ],
     },
-  ],
-  navSecondary: [
+  ];
+
+const navSecondary = [
     {
       title: "Settings",
       url: "#",
@@ -114,8 +110,9 @@ const data = {
       url: "#",
       icon: SearchIcon,
     },
-  ],
-  documents: [
+  ];
+
+const documents = [
     {
       name: "N8N Workflow",
       url: "#",
@@ -131,10 +128,18 @@ const data = {
       url: "#",
       icon: DatabaseIcon,
     },
-  ],
-}
+];
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({
+  user,
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  user: {
+    name: string
+    email: string
+    avatar: string
+  }
+}) {
 
   return (
     <Sidebar collapsible="offcanvas" {...props}>
@@ -150,12 +155,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
+        <NavMain items={navMain} />
+        <NavDocuments items={documents} />
         {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} />
       </SidebarFooter>
     </Sidebar>
   )
