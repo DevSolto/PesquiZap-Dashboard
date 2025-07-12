@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/prisma";
 
+const DELIMITER = ";";
+
 function escapeCsv(value: string | number | null | undefined) {
   if (value === null || value === undefined) return "";
   const str = String(value);
-  if (/[",\n]/.test(str)) {
+  if (/["\r\n]/.test(str) || str.includes(DELIMITER)) {
     return '"' + str.replace(/"/g, '""') + '"';
   }
   return str;
@@ -14,10 +16,13 @@ export async function GET(request: Request) {
   const idPesquisa = searchParams.get("id_pesquisa");
 
   if (!idPesquisa) {
-    return new Response(JSON.stringify({ error: "ID da pesquisa não fornecido" }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    return new Response(
+      JSON.stringify({ error: "ID da pesquisa não fornecido" }),
+      {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
   }
 
   try {
@@ -32,6 +37,11 @@ export async function GET(request: Request) {
 
     const questionarios = await prisma.questionario.findMany({
       where: { id_pesquisa: idPesquisa },
+      orderBy: {
+        contato: {
+          telefone: "asc",
+        },
+      },
       select: {
         contato: {
           select: { telefone: true },
@@ -48,7 +58,7 @@ export async function GET(request: Request) {
     const header = ["contato", ...perguntas.map((p) => p.texto_pergunta)];
     const rows = questionarios.map((q) => {
       const resps = new Map(
-        q.resposta.map((r) => [r.id_pergunta, r.conteudo_resposta])
+        q.resposta.map((r) => [r.id_pergunta, r.conteudo_resposta]),
       );
       return [
         q.contato?.telefone ?? "",
@@ -57,9 +67,9 @@ export async function GET(request: Request) {
     });
 
     const csv = [
-      header.map(escapeCsv).join(","),
-      ...rows.map((r) => r.map(escapeCsv).join(",")),
-    ].join("\n");
+      "\uFEFF" + header.map(escapeCsv).join(DELIMITER),
+      ...rows.map((r) => r.map(escapeCsv).join(DELIMITER)),
+    ].join("\r\n");
 
     return new Response(csv, {
       status: 200,
@@ -70,9 +80,9 @@ export async function GET(request: Request) {
     });
   } catch (error) {
     console.error("Erro ao gerar CSV de respostas:", error);
-    return new Response(
-      JSON.stringify({ error: "Erro ao gerar relatório" }),
-      { status: 500, headers: { "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: "Erro ao gerar relatório" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
