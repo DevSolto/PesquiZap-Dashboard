@@ -98,7 +98,7 @@ const FormControl = React.forwardRef<
 FormControl.displayName = "FormControl"
 
 const FormDescription = React.forwardRef<
-  React.ElementRef<HTMLParagraphElement>,
+  HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
   const { formDescriptionId } = useFormField()
@@ -116,7 +116,7 @@ const FormDescription = React.forwardRef<
 FormDescription.displayName = "FormDescription"
 
 const FormMessage = React.forwardRef<
-  React.ElementRef<HTMLParagraphElement>,
+  HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
