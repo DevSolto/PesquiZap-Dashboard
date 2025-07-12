@@ -10,12 +10,12 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const acessos: { id_pesquisa: string }[] =
-    await prisma.$queryRaw`SELECT id_pesquisa FROM usuario_pesquisa WHERE id_usuario = ${data.user.id}`;
+  const acessos: { pesquisa_id: string }[] =
+    await prisma.$queryRaw`SELECT pesquisa_id FROM usuario_pesquisa WHERE usuario_id   = ${data.user.id}`;
 
   const pesquisas = await prisma.pesquisa.findMany({
     where: {
-      id_pesquisa: { in: acessos.map((a) => a.id_pesquisa) },
+      id_pesquisa: { in: acessos.map((a) => a.pesquisa_id) },
     },
   });
 
