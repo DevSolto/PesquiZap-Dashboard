@@ -21,8 +21,10 @@ export default async function Layout({ children }: { children: React.ReactNode }
     <SidebarProvider>
       <AppSidebar variant="inset" user={user} />
       <SidebarInset>
-        <SiteHeader />
-        {children}
+        <div className="mx-auto flex w-full max-w-7xl flex-col px-4 md:px-6">
+          <SiteHeader />
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   )
